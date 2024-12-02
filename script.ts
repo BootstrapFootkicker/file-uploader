@@ -3,9 +3,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Example query
-  const allUsers = await prisma.user.findMany();
-  console.log(allUsers);
+  // Example query with all required fields
+  const user = await prisma.user.findMany()
+
+  console.log(user);
 }
 
 main()
