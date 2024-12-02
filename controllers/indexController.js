@@ -7,8 +7,9 @@ const prisma = new PrismaClient();
 exports.index = async (req, res) => {
   try {
     // Example query with all required fields
+    const userName = req.isAuthenticated() ? req.user.userName : "Guest";
     const users = await prisma.user.findMany();
-    res.json(users); // Send the user data as JSON response
+    res.status(200).json({ users, userName }); // Send the user data as JSON response with status code 200
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
