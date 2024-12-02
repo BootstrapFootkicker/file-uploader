@@ -1,5 +1,3 @@
-//placeholder
-
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 
@@ -7,7 +5,7 @@ const prisma = new PrismaClient();
 
 exports.addUserToDb = async (req, res) => {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: { userName: req.body.userName },
     });
 

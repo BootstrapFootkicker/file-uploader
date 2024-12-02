@@ -33,7 +33,7 @@ function initialize(passport, getUserByName, getUserByUserId) {
   passport.serializeUser((user, done) => {
     console.log("Serializing user:", user);
     //refers to database objects
-    done(null, { id: user.userid, userName: user.username });
+    done(null, { id: user.id, userName: user.username });
   });
 
   passport.deserializeUser((sessionData, done) => {

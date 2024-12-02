@@ -16,14 +16,14 @@ exports.getUsers = async (req, res) => {
 
 exports.getUserByName = async (username) => {
   try {
-    return await prisma.user.findUnique({
-      where: {userName: username},
+    return await prisma.user.findFirst({
+      where: {
+        userName: username,
+      },
     });
-  } catch (err) {
-    console.error("Database query error:", err);
-    throw err;
-  } finally {
-    await prisma.$disconnect();
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 
@@ -41,12 +41,17 @@ exports.getUserId = async (userName) => {
 };
 
 exports.getUserByUserId = async (id) => {
+  if (!id) {
+    throw new Error("User ID is required");
+  }
+
   try {
     return await prisma.user.findUnique({
-      where: {id: id},
+      where: { id: id },
     });
   } catch (err) {
     console.error("Database query error:", err);
+    throw err;
   } finally {
     await prisma.$disconnect();
   }
