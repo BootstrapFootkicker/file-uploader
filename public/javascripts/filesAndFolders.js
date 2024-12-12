@@ -1,7 +1,5 @@
-function addFolderForm(folderForm)
-{
-    showPopup(folderForm);
-
+function addFolderForm(formFunction) {
+    showPopup(formFunction);
 }
 
 
