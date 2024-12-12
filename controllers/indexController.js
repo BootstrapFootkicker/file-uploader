@@ -9,7 +9,8 @@ exports.index = async (req, res) => {
     // Example query with all required fields
     const userName = req.isAuthenticated() ? req.user.userName : "Guest";
     const users = await prisma.user.findMany();
-    res.status(200).json({ users, userName }); // Send the user data as JSON response with status code 200
+    // res.status(200).json({ users, userName }); // Send the user data as JSON response with status code 200
+    res.render("index", {title:"index",userName:userName }); // Render the index view with user data
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>filesAndFolders</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+<script src="/javascripts/filesAndFolders.js"></script>
+</head>
+<body>
+<header>
+     <nav class="links">
+        <a href="/">Home</a>
+        <a href="/register">Register</a>
+        <% if (userName !== "Guest") { %>
+            <form action="/logout?_method=DELETE" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        <% } else { %>
+            <a href="/login">Login</a>
+        <% } %>
+        <a href="/files">Files</a>
+      </nav>
+</header>
+<div class="folderContainer">
+    <button class="add" onclick= addFolderForm()>+ Folder</button>
+
+</div>
+
+
+
+
+
+</body>
+</html>

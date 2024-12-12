@@ -19,6 +19,7 @@ const usersRouter = require("./routes/users");
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout");
+const filesAndFoldersRouter = require("./routes/filesAndFolders");
 
 
 const initializePassport = require("./config/passport-config");
@@ -41,12 +42,29 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+const { PrismaClient } = require("@prisma/client");
+const {filesAndFolders} = require("./controllers/filesAndFoldersController");
+const PrismaSessionStore = require("@quixo3/prisma-session-store").PrismaSessionStore;
+
+const prisma = new PrismaClient();
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-  }),
+    store: new PrismaSessionStore(
+      prisma,
+      {
+        checkPeriod: 2 * 60 * 1000,  // ms
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined,
+      }
+    ),
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,  // 1 day
+    },
+  })
 );
 app.use(flash());
 app.use(passport.initialize());
@@ -58,6 +76,7 @@ app.use("/users", usersRouter);
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
+app.use("/files",filesAndFoldersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
