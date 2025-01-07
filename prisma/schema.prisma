@@ -16,11 +16,22 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  folder folder[]
 }
 
 model Session {
   id        String   @id
   sid       String   @unique
-  data      String   @db.Text  // MediumText may be needed for MySql
-  expiresAt   DateTime
+  data      String   @db.Text // MediumText may be needed for MySql
+  expiresAt DateTime
+}
+
+model folder {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }

@@ -85,6 +85,13 @@ function addFolder(){
     let folder = createFolder();
     let newFolderButton= document.createElement("button")
     newFolderButton.textContent = folder.name;
+    newFolderButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        newFolderButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.location.href = "/folder";
+        });
+    })
     folderContainer.appendChild(newFolderButton);
 
 }
