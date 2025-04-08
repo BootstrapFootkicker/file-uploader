@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 
 const prisma = new PrismaClient();
 
+// Function to handle user registration
 exports.addUserToDb = async (req, res) => {
   try {
     const user = await prisma.user.findFirst({

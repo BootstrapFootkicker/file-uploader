@@ -1,4 +1,4 @@
-//add to route if user is not logged
+//Checks if the user is logged in/Authentication middleware
 function checkAuth(req, res, next) {
   if (req.isAuthenticated()) {
     return next();

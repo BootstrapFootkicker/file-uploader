@@ -47,6 +47,7 @@ const { PrismaClient } = require("@prisma/client");
 const {filesAndFolders} = require("./controllers/filesAndFoldersController");
 const PrismaSessionStore = require("@quixo3/prisma-session-store").PrismaSessionStore;
 
+// Initialize Prisma Client i.e logging into database
 const prisma = new PrismaClient();
 
 app.use(

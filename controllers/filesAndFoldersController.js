@@ -1,4 +1,4 @@
-
+//todo make better name for file for route consistence
 exports.filesAndFolders =
     async (req, res) => {
         try {
@@ -12,6 +12,7 @@ exports.filesAndFolders =
 
     exports.renderFolder = (req, res) => {
         try {
+            //todo Get the folderId from the request params and use it to fetch the folder from the database
             const userName = req.isAuthenticated() ? req.user.userName : "Guest";
             res.render("folder", {title: "folder", userName: userName});
         } catch (err) {

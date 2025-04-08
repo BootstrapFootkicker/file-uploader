@@ -2,7 +2,16 @@ require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bcrypt = require("bcrypt");
 
-//confirm working
+//Boilerplate
+// This function initializes the passport authentication strategy
+// It uses the LocalStrategy for username and password authentication
+// It also serializes and deserializes user information for session management
+// The function takes in passport, getUserByName, and getUserByUserId as parameters
+// getUserByName is used to find a user by their username
+// getUserByUserId is used to find a user by their user ID
+// The function is exported for use in other parts of the application
+// It is used in the app.js file to initialize passport with the necessary strategies
+// bcrypt is used to hash and compare passwords securely
 
 function initialize(passport, getUserByName, getUserByUserId) {
   const authenticateUser = async (userName, password, done) => {
@@ -36,6 +45,7 @@ function initialize(passport, getUserByName, getUserByUserId) {
     done(null, { id: user.id, userName: user.userName });
   });
 
+  //deserializes the user object from the session
   passport.deserializeUser((sessionData, done) => {
     console.log("Deserializing session data:", sessionData);
     getUserByUserId(sessionData.id)

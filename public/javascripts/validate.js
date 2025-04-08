@@ -1,3 +1,4 @@
+//used to login
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("#register-form");
   const password = document.querySelector("#password");

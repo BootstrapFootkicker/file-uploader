@@ -3,6 +3,7 @@ const loginController = require("../controllers/loginController");
 const router = express.Router();
 const passport = require("passport");
 
+// GET login page
 router.get("/", (req, res, next) => {
   try {
     res.render("login", { title: "Login" });

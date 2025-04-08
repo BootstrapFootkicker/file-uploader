@@ -4,6 +4,7 @@ const filesAndFoldersController = require("../controllers/filesAndFoldersControl
 const checkAuth = require("../scripts/auth");
 const router = express.Router();
 
+//todo wip create better name for file
 router.get("/", checkAuth,filesAndFoldersController.filesAndFolders);
 router.get("/:folderId", checkAuth,);
 

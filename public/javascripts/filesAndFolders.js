@@ -1,8 +1,11 @@
+//todo work in here first 3/2/25
+
 function addFolderForm(formFunction) {
     showPopup(formFunction);
 }
 
 
+//used in filesAndFolders.ejs to create the folder form on the fly
 function createFolderForm() {
     let folderFormContainer = document.createElement("div");
     folderFormContainer.classList.add("folderFormContainer");
@@ -78,6 +81,7 @@ function createFolder() {
     };
 }
 
+// This adds folder button to dom
 function addFolder(){
 
     //todo add folders to database and possibly session
@@ -96,6 +100,7 @@ function addFolder(){
 
 }
 
+//wip uploading a file to db i think
 function createUploadFileForm(){
     let uploadFileFormContainer = document.createElement("div");
     let formHeader = document.createElement("h3");
