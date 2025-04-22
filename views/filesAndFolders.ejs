@@ -25,8 +25,12 @@
       </nav>
 </header>
 <div class="folderContainer">
-    <button class="add" onclick= addFolderForm(createFolderForm)>+ Folder</button>
-
+    <% folders.forEach(folder => { %>
+        <button onclick="window.location.href='/folder/<%= folder.id %>'">
+            <%= folder.name %>
+        </button>
+    <% }) %>
+    <button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
 </div>
 
 

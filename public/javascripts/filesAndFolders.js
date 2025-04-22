@@ -82,48 +82,55 @@ function createFolder() {
 }
 
 // This adds folder button to dom
-function addFolder(){
+async function addFolder() {
+    let folderName = document.querySelector("input[name='folderName']").value;
 
-    //todo add folders to database and possibly session
-    let folderContainer = document.querySelector(".folderContainer");
-    let folder = createFolder();
-    let newFolderButton= document.createElement("button")
-    newFolderButton.textContent = folder.name;
-    newFolderButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        newFolderButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            window.location.href = "/folder";
+    if (!folderName.trim()) {
+        alert("Folder name cannot be empty.");
+        return;
+    }
+
+    try {
+        const res = await fetch("/files/addFolder", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ folderName }),
         });
-    })
-    folderContainer.appendChild(newFolderButton);
 
+        if (!res.ok) {
+            throw new Error("Failed to create folder");
+        }
+
+        const folder = await res.json();
+
+        let folderContainer = document.querySelector(".folderContainer");
+        let newFolderButton = document.createElement("button");
+        newFolderButton.textContent = folder.name;
+        newFolderButton.addEventListener("click", () => {
+            window.location.href = `/folder/${folder.id}`;
+        });
+
+        folderContainer.appendChild(newFolderButton);
+    } catch (error) {
+        console.error(error);
+        alert("An error occurred while creating the folder.");
+    }
 }
 
-//wip uploading a file to db i think
-function createUploadFileForm(){
-    let uploadFileFormContainer = document.createElement("div");
-    let formHeader = document.createElement("h3");
-    formHeader.textContent = "Upload File";
-    let uploadFileForm = document.createElement("form");
-    let formFileInput = document.createElement("input");
-    formFileInput.type = "file";
-    formFileInput.name = "file";
-    let fileNameInput = document.createElement("input");
-    fileNameInput.type = "text";
-    let fileDescriptionInput = document.createElement("input");
-    fileDescriptionInput.type = "text";
-    let submitButton = document.createElement("button");
-    submitButton.type = "submit";
-    submitButton.textContent = "Upload File";
 
-    uploadFileForm.appendChild(formHeader);
-    uploadFileForm.appendChild(formFileInput);
-    uploadFileForm.appendChild(fileNameInput);
-    uploadFileForm.appendChild(fileDescriptionInput);
-    uploadFileForm.appendChild(submitButton);
-    uploadFileFormContainer.appendChild(uploadFileForm);
-    return uploadFileFormContainer;
+async function fetchUserFolders() {
+    try {
+        const res = await fetch("/files/userFolders");
+        if (!res.ok) {
+            throw new Error("Failed to fetch folders");
+        }
 
-
+        const folders = await res.json();
+        console.log(folders); // Use this data to render folders in the UI
+    } catch (error) {
+        console.error(error);
+        alert("An error occurred while fetching folders.");
+    }
 }
