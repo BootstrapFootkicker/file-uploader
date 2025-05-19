@@ -5,7 +5,7 @@ function addFolderForm(formFunction) {
 }
 
 
-//used in filesAndFolders.ejs to create the folder form on the fly
+//used in folderList.ejs to create the folder form on the fly
 function createFolderForm() {
     let folderFormContainer = document.createElement("div");
     folderFormContainer.classList.add("folderFormContainer");

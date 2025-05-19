@@ -1,13 +1,12 @@
-
 const express = require("express");
-const filesAndFoldersController = require("../controllers/filesAndFoldersController");
+const folderController = require("../controllers/folderController");
 const checkAuth = require("../scripts/auth");
 const router = express.Router();
 
-//todo wip create better name for file
-router.get("/", checkAuth,filesAndFoldersController.filesAndFolders);
-router.get("/:folderId", checkAuth,);
-router.post("/addFolder", checkAuth, filesAndFoldersController.addFolderToDatabase);
-router.get("/userFolders",filesAndFoldersController.getUserFolders)
+// Routes for folder operations
+router.get("/", checkAuth, folderController.renderFilesAndFolders);
+router.get("/:folderId", checkAuth, folderController.renderFolder);
+router.post("/add", checkAuth, folderController.addFolder);
+router.get("/userFolders", checkAuth, folderController.getUserFolders);
 
 module.exports = router;
