@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>filesAndFolders</title>
     <link rel="stylesheet" href="/stylesheets/folderStyles.css">
-<script src="/javascripts/folderScripts.js"></script>
+<script src="../public/javascripts/folderScripts.js" defer></script>
 </head>
 <body>
 <header>
@@ -24,15 +24,36 @@
         <a href="/files">Files</a>
       </nav>
 </header>
-<div class="folderContainer">
+<div class="folderList-Container">
     <% folders.forEach(folder => { %>
-        <button onclick="window.location.href='/folder/<%= folder.id %>'">
-            <%= folder.name %>
-        </button>
+    <a class="folder-container" href="/folder/<%= folder.id %>">
+        <div class="folder-icon">
+            <img src="/images/folder.png" alt="Folder Icon">
+        </div>
+    <div class="folder-name">
+        <span><%= folder.name %></span>
+    </div>
+     <div class="drpdown" data-dropdown>
+         <button class="drpdownMenuButton" data-dropdown-button>...</button>
+         <div class="drpdownMenu">
+             <a href="">Test</a>
+         </div>
+<!--            <div class="dropdown-content">-->
+<!--                <a href="/folder/<%= folder.id %>/edit">Edit</a>-->
+<!--                <form action="/folder/<%= folder.id %>?_method=DELETE" method="post">-->
+<!--                    <button type="submit">Delete</button>-->
+<!--                </form>-->
+<!--     </div>-->
+        </div>
+
+
+
     <% }) %>
-    <button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
 </div>
 
+
+
+ <button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
 
 
 

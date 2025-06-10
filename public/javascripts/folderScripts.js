@@ -1,5 +1,23 @@
 //todo work in here first 3/2/25
 
+document.addEventListener('click',e => {
+    const isDropdownButton = e.target.matches('[data-dropdown-button]');
+    if (!isDropdownButton && e.target.closest('[data-dropdown]') != null) return;
+
+    if(isDropdownButton){
+        currentDropdown = e.target.closest('[data-dropdown]');
+        currentDropdown.classList.toggle('active');
+    }
+
+    document.querySelectorAll('[data-dropdown].active').forEach(dropdown => {
+        if(dropdown === currentDropdown) return;
+        dropdown.classList.remove('active');
+    }
+    );
+})
+
+
+
 function addFolderForm(formFunction) {
     showPopup(formFunction);
 }
@@ -134,3 +152,4 @@ async function fetchUserFolders() {
         alert("An error occurred while fetching folders.");
     }
 }
+
