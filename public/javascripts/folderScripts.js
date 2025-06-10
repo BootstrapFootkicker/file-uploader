@@ -1,20 +1,19 @@
-//todo work in here first 3/2/25
+document.addEventListener('click', e => {
+  const isDropdownButton = e.target.matches('[data-dropdown-button]');
+  let currentDropdown;
 
-document.addEventListener('click',e => {
-    const isDropdownButton = e.target.matches('[data-dropdown-button]');
-    if (!isDropdownButton && e.target.closest('[data-dropdown]') != null) return;
+  if (isDropdownButton) {
+    currentDropdown = e.target.closest('[data-dropdown]');
+    currentDropdown.classList.toggle('active');
+  }
 
-    if(isDropdownButton){
-        currentDropdown = e.target.closest('[data-dropdown]');
-        currentDropdown.classList.toggle('active');
-    }
+  // Close all other dropdowns
+  document.querySelectorAll('[data-dropdown].active').forEach(dropdown => {
+    if (dropdown === currentDropdown) return;
+    dropdown.classList.remove('active');
+  });
+});
 
-    document.querySelectorAll('[data-dropdown].active').forEach(dropdown => {
-        if(dropdown === currentDropdown) return;
-        dropdown.classList.remove('active');
-    }
-    );
-})
 
 
 
@@ -153,3 +152,10 @@ async function fetchUserFolders() {
     }
 }
 
+
+document.querySelectorAll('.drpdownMenu a').forEach(link => {
+  link.addEventListener('click', () => {
+    const parentDropdown = link.closest('[data-dropdown]');
+    parentDropdown?.classList.remove('active');
+  });
+});

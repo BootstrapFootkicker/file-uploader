@@ -1,64 +1,54 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>filesAndFolders</title>
-    <link rel="stylesheet" href="/stylesheets/folderStyles.css">
-<script src="../public/javascripts/folderScripts.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Files and Folders</title>
+  <link rel="stylesheet" href="/stylesheets/folderStyles.css">
+  <script src="/javascripts/folderScripts.js" defer></script>
 </head>
 <body>
 <header>
-     <nav class="links">
-        <a href="/">Home</a>
-        <a href="/register">Register</a>
-        <% if (userName !== "Guest") { %>
-            <form action="/logout?_method=DELETE" method="post">
-                <button type="submit">Logout</button>
-            </form>
-        <% } else { %>
-            <a href="/login">Login</a>
-        <% } %>
-        <a href="/files">Files</a>
-      </nav>
+  <nav class="links">
+    <a href="/">Home</a>
+    <a href="/register">Register</a>
+    <% if (userName !== "Guest") { %>
+      <form action="/logout?_method=DELETE" method="post">
+        <button type="submit">Logout</button>
+      </form>
+    <% } else { %>
+      <a href="/login">Login</a>
+    <% } %>
+    <a href="/files">Files</a>
+  </nav>
 </header>
+
 <div class="folderList-Container">
-    <% folders.forEach(folder => { %>
-    <a class="folder-container" href="/folder/<%= folder.id %>">
+  <% folders.forEach(folder => { %>
+    <div class="folder-container">
+      <a class="folder-link" href="/folder/<%= folder.id %>">
         <div class="folder-icon">
-            <img src="/images/folder.png" alt="Folder Icon">
+          <img src="/images/folder.png" alt="Folder Icon">
         </div>
-    <div class="folder-name">
-        <span><%= folder.name %></span>
+        <div class="folder-name">
+          <span><%= folder.name %></span>
+        </div>
+      </a>
+
+      <div class="drpdown" data-dropdown>
+        <button class="drpdownMenuButton" data-dropdown-button>...</button>
+        <div class="drpdownMenu">
+            <a href="/">test</a>
+<!--          <button type="button">Test</button>-->
+        </div>
+      </div>
     </div>
-     <div class="drpdown" data-dropdown>
-         <button class="drpdownMenuButton" data-dropdown-button>...</button>
-         <div class="drpdownMenu">
-             <a href="">Test</a>
-         </div>
-<!--            <div class="dropdown-content">-->
-<!--                <a href="/folder/<%= folder.id %>/edit">Edit</a>-->
-<!--                <form action="/folder/<%= folder.id %>?_method=DELETE" method="post">-->
-<!--                    <button type="submit">Delete</button>-->
-<!--                </form>-->
-<!--     </div>-->
-        </div>
-
-
-
-    <% }) %>
+  <% }) %>
 </div>
 
-
-
- <button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
-
-
-
+<button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
 
 </body>
 </html>
-
-<!-- TODO: Create a better name for this file -->
