@@ -1,3 +1,6 @@
+console.log("🔥 app.js is running");
+
+
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
@@ -98,3 +101,12 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server listening on port ${PORT}`);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error("❌ Uncaught Exception:", err);
+});

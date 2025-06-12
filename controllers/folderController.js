@@ -35,16 +35,23 @@ exports.renderFolder = async (req, res) => {
 
 // Add a new folder
 exports.addFolder = async (req, res) => {
+    console.log("📥 POST /addFolder hit");
+
     try {
         const folderName = req.body.folderName;
         const userId = req.user?.id;
 
+        console.log("🧾 Request body:", req.body);
+        console.log("👤 User ID:", userId);
+
         if (!folderName) {
+            console.warn("⚠️ Folder name missing");
             return res.status(400).json({ error: "Folder name is required" });
         }
 
         const existingFolder = await this.getFolderByName(folderName);
         if (existingFolder) {
+            console.warn("⚠️ Folder already exists:", existingFolder.name);
             return res.status(400).json({ error: "Folder already exists" });
         }
 
@@ -52,12 +59,14 @@ exports.addFolder = async (req, res) => {
             data: { name: folderName, userId },
         });
 
+        console.log("✅ Folder created:", folder);
         res.status(201).json(folder);
     } catch (err) {
-        console.error("Error adding folder:", err);
+        console.error("❌ Error adding folder:", err);
         res.status(500).json({ error: "Failed to create folder" });
     }
 };
+
 
 // Get a folder by name
 exports.getFolderByName = async (folderName) => {

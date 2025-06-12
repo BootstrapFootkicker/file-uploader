@@ -122,19 +122,42 @@ async function addFolder() {
 
         const folder = await res.json();
 
-        let folderContainer = document.querySelector(".folderContainer");
-        let newFolderButton = document.createElement("button");
-        newFolderButton.textContent = folder.name;
-        newFolderButton.addEventListener("click", () => {
-            window.location.href = `/folder/${folder.id}`;
-        });
+        // ✅ Select the container that holds all folder blocks
+        let folderListContainer = document.querySelector(".folderList-Container");
+        if (!folderListContainer) {
+            console.warn("⚠️ folderList-Container not found");
+            return;
+        }
 
-        folderContainer.appendChild(newFolderButton);
+        // ✅ Create a new folder block
+        let newFolder = document.createElement("div");
+        newFolder.classList.add("folder-container");
+
+        newFolder.innerHTML = `
+          <a class="folder-link" href="/folder/${folder.id}">
+            <div class="folder-icon">
+              <img src="/images/folder.png" alt="Folder Icon">
+            </div>
+            <div class="folder-name">
+              <span>${folder.name}</span>
+            </div>
+          </a>
+
+          <div class="drpdown" data-dropdown>
+            <button class="drpdownMenuButton" data-dropdown-button>...</button>
+            <div class="drpdownMenu">
+              <a href="/">test</a>
+            </div>
+          </div>
+        `;
+
+        folderListContainer.appendChild(newFolder);
     } catch (error) {
-        console.error(error);
+        console.error("❌ Error in addFolder():", error);
         alert("An error occurred while creating the folder.");
     }
 }
+
 
 
 async function fetchUserFolders() {

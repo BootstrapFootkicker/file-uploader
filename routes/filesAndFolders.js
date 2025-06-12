@@ -6,7 +6,10 @@ const router = express.Router();
 // Routes for folder operations
 router.get("/", checkAuth, folderController.renderFilesAndFolders);
 router.get("/:folderId", checkAuth, folderController.renderFolder);
-router.post("/add", checkAuth, folderController.addFolder);
+router.post("/addFolder", (req, res, next) => {
+    console.log("📡 /files/addFolder called");
+    next();
+}, checkAuth, folderController.addFolder);
 router.get("/userFolders", checkAuth, folderController.getUserFolders);
 
 module.exports = router;
