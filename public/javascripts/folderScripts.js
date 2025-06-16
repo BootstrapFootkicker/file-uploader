@@ -87,17 +87,6 @@ function hidePopup(overlay) {
 }
 
 
-
-function createFolder() {
-    let folderName = document.querySelector("input[name='folderName']").value;
-
-    return {
-        name: folderName,
-        type: "folder",
-        children: []
-    };
-}
-
 // This adds folder button to dom
 async function addFolder() {
     let folderName = document.querySelector("input[name='folderName']").value;
@@ -157,6 +146,42 @@ async function addFolder() {
         alert("An error occurred while creating the folder.");
     }
 }
+
+async function removeFolder(button) {
+    // Go up to the folder-container div
+    const folderContainer = button.closest(".folder-container");
+
+    // Then query the .folder-name inside it
+    const folderNameElement = folderContainer.querySelector(".folder-name");
+
+    // Get the trimmed text content
+    const folderName = folderNameElement.textContent.trim();
+
+    console.log("Folder to DELETE:", folderName);
+
+    try {
+        const res = await fetch("/files/removeFolder", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({folderName}),
+        });
+
+        if (!res.ok) {
+            throw new Error("Failed to DELETE folder");
+        }
+
+        folderContainer.remove();
+
+
+        } catch (error) {
+        console.error("❌ Error in addFolder():", error);
+        alert("An error occurred while Deleting the folder.");
+    }
+
+}
+
 
 
 

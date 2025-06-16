@@ -67,11 +67,47 @@ exports.addFolder = async (req, res) => {
     }
 };
 
+//remove a folder
+
+exports.removeFolder = async (req, res) => {
+    console.log("BODY:", req.body, "SESSION USER:", req.session?.user);
+  const userId = req.user?.id;
+  const folderName = req.body.folderName;
+
+  if (!userId || !folderName) {
+    return res.status(400).json({ error: "Missing user ID or folder name" });
+  }
+
+  const folder = await exports.getFolderByNameAndUser(folderName, userId);
+
+  if (!folder) {
+    return res.status(404).json({ error: "Folder not found" });
+  }
+
+  try {
+    await prisma.folder.delete({
+      where: { id: folder.id }
+    });
+
+    return res.status(200).json({ message: "Folder deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting folder:", err);
+    return res.status(500).json({ error: "Failed to delete folder" });
+  }
+};
+
+
 
 // Get a folder by name
-exports.getFolderByName = async (folderName) => {
-    return prisma.folder.findUnique({ where: { name: folderName } });
+exports.getFolderByNameAndUser = async (folderName, userId) => {
+  return prisma.folder.findFirst({
+      where: {
+          name: folderName,
+          userId: userId,
+      },
+  });
 };
+
 
 // Get all folders for a user
 exports.getUserFoldersById = async (userId) => {

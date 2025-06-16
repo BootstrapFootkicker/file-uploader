@@ -12,4 +12,6 @@ router.post("/addFolder", (req, res, next) => {
 }, checkAuth, folderController.addFolder);
 router.get("/userFolders", checkAuth, folderController.getUserFolders);
 
+router.delete("/removeFolder",checkAuth,folderController.removeFolder)
+
 module.exports = router;
