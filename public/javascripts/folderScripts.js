@@ -21,6 +21,13 @@ function addFolderForm(formFunction) {
     showPopup(formFunction);
 }
 
+function folderInfoForm(){
+ let folderFormContainer = document.createElement("div");
+    folderFormContainer.classList.add("folderFormContainer");
+
+    let folderForm = document.createElement("form");
+    folderForm.classList.add("folderForm");
+}
 
 //used in folderList.ejs to create the folder form on the fly
 function createFolderForm() {

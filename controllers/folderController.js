@@ -49,7 +49,7 @@ exports.addFolder = async (req, res) => {
             return res.status(400).json({ error: "Folder name is required" });
         }
 
-        const existingFolder = await this.getFolderByName(folderName);
+        const existingFolder = await exports.getFolderByNameAndUser(folderName);
         if (existingFolder) {
             console.warn("⚠️ Folder already exists:", existingFolder.name);
             return res.status(400).json({ error: "Folder already exists" });
