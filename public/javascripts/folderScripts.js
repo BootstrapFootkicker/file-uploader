@@ -21,12 +21,36 @@ function addFolderForm(formFunction) {
     showPopup(formFunction);
 }
 
-function folderInfoForm(){
- let folderFormContainer = document.createElement("div");
+function folderInfoForm(folder) {
+    let folderFormContainer = document.createElement("div");
     folderFormContainer.classList.add("folderFormContainer");
 
     let folderForm = document.createElement("form");
     folderForm.classList.add("folderForm");
+
+    let formText = document.createElement("h1");
+    formText.textContent = folder.textContent;
+
+    let nameEditInput = document.createElement('input');
+    nameEditInput.type = 'text';
+    nameEditInput.name = "NewFolderName";
+
+    let submitButton = document.createElement("button");
+    submitButton.type = "submit";
+    submitButton.textContent = "Edit Folder Name";
+
+    submitButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        hidePopup(document.querySelector(".popup-overlay"));
+    });
+
+    folderForm.appendChild(formText);
+    folderForm.appendChild(nameEditInput);
+    folderForm.appendChild(submitButton);
+
+    folderFormContainer.appendChild(folderForm);
+
+    return folderFormContainer;
 }
 
 //used in folderList.ejs to create the folder form on the fly
