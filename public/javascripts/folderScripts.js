@@ -17,11 +17,17 @@ document.addEventListener('click', e => {
 
 
 
+
 function addFolderForm(formFunction) {
     showPopup(formFunction);
 }
 
-function folderInfoForm(folder) {
+function folderInfoForm(button) {
+    const folderContainer = button.closest(".folder-container");
+
+    // Then query the .folder-name inside it
+    const folderNameElement = folderContainer.querySelector(".folder-name");
+
     let folderFormContainer = document.createElement("div");
     folderFormContainer.classList.add("folderFormContainer");
 
@@ -29,20 +35,37 @@ function folderInfoForm(folder) {
     folderForm.classList.add("folderForm");
 
     let formText = document.createElement("h1");
-    formText.textContent = folder.textContent;
+    formText.textContent = folderNameElement.textContent;
 
     let nameEditInput = document.createElement('input');
     nameEditInput.type = 'text';
-    nameEditInput.name = "NewFolderName";
+    nameEditInput.name = "newFolderName";
 
     let submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.textContent = "Edit Folder Name";
 
-    submitButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        hidePopup(document.querySelector(".popup-overlay"));
+   submitButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const folderName = folderNameElement.textContent;
+    const newFolderName = nameEditInput.value;
+    const res = await fetch("/files/editFolderName", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ folderName, newFolderName }),
     });
+
+    if (!res.ok) {
+        throw new Error("Failed to Update folder name");
+    }
+
+    // Update the folder name in the DOM immediately
+    folderNameElement.textContent = newFolderName;
+
+    hidePopup(document.querySelector(".popup-overlay"));
+});
 
     folderForm.appendChild(formText);
     folderForm.appendChild(nameEditInput);

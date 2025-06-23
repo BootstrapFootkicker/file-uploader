@@ -14,4 +14,5 @@ router.get("/userFolders", checkAuth, folderController.getUserFolders);
 
 router.delete("/removeFolder",checkAuth,folderController.removeFolder)
 
+router.put('/editFolderName', checkAuth, folderController.updateFolder);
 module.exports = router;

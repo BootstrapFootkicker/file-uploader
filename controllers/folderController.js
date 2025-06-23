@@ -96,6 +96,37 @@ exports.removeFolder = async (req, res) => {
   }
 };
 
+//update Folder
+// controllers/folderController.js
+
+exports.updateFolder = async (req, res) => {
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
+
+    const userId = req.user?.id;
+  const folderName = req.body.folderName?.trim(); // Trim whitespace
+    const newFolderName = req.body.newFolderName?.trim();
+
+    if (!userId || !folderName || !newFolderName) {
+        return res.status(400).json({ error: "Missing user ID, current folder name, or new folder name" });
+    }
+
+    const folder = await exports.getFolderByNameAndUser(folderName, userId);
+
+    if (!folder) {
+        return res.status(404).json({ error: "Folder not found" });
+    }
+
+    try {
+        await prisma.folder.update({
+            where: { id: folder.id },
+            data: { name: newFolderName }
+        });
+        return res.status(200).json({ message: "Folder name updated successfully" });
+    } catch (err) {
+        return res.status(500).json({ error: "Failed to update folder name" });
+    }
+};
 
 
 // Get a folder by name
