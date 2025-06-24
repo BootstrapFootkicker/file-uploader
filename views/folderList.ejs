@@ -8,6 +8,7 @@
   <title>Files and Folders</title>
   <link rel="stylesheet" href="/stylesheets/folderStyles.css">
   <script src="/javascripts/folderScripts.js" defer></script>
+  <script src="/javascripts/dropdown.js" defer></script>
 </head>
 <body>
 <header>
@@ -41,15 +42,17 @@
         <button class="drpdownMenuButton" data-dropdown-button>...</button>
         <div class="drpdownMenu">
 
-<button type="button" onclick="addFolderForm(() => folderInfoForm(this))">Edit</button>
-          <button type="button" onclick="removeFolder(this)">Delete</button>
+<button type="button" onclick="openFolderPopup(() => buildEditFolderForm(this))">Edit</button>
+          <button type="button" onclick="deleteFolder(this)">Delete</button>
         </div>
       </div>
     </div>
   <% }) %>
 </div>
 
-<button class="add" onclick="addFolderForm(createFolderForm)">+ Folder</button>
+<button class="add" onclick="openFolderPopup(buildCreateFolderForm)">+ Folder</button>
 
 </body>
 </html>
+
+

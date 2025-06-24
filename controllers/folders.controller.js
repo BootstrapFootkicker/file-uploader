@@ -3,11 +3,11 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // Render the files and folders page
-exports.renderFilesAndFolders = async (req, res) => {
+exports.renderUserFoldersPage = async (req, res) => {
     try {
         const userId = req.user?.id;
         const userName = req.isAuthenticated() ? req.user.userName : "Guest";
-        const folders = userId ? await this.getUserFoldersById(userId) : [];
+        const folders = userId ? await this.findFoldersByUserId(userId) : [];
         res.render("folderList", { title: "User Folders", folders, userName });
     } catch (err) {
         console.error("Error rendering files and folders:", err);
@@ -16,7 +16,7 @@ exports.renderFilesAndFolders = async (req, res) => {
 };
 
 // Render a specific folder
-exports.renderFolder = async (req, res) => {
+exports.renderSingleFolderPage = async (req, res) => {
     try {
         const folderId = req.params.folderId;
         const userName = req.isAuthenticated() ? req.user.userName : "Guest";
@@ -34,7 +34,7 @@ exports.renderFolder = async (req, res) => {
 };
 
 // Add a new folder
-exports.addFolder = async (req, res) => {
+exports.createFolder = async (req, res) => {
     console.log("📥 POST /addFolder hit");
 
     try {
@@ -49,7 +49,7 @@ exports.addFolder = async (req, res) => {
             return res.status(400).json({ error: "Folder name is required" });
         }
 
-        const existingFolder = await exports.getFolderByNameAndUser(folderName);
+        const existingFolder = await exports.findFolderByNameAndUserId(folderName);
         if (existingFolder) {
             console.warn("⚠️ Folder already exists:", existingFolder.name);
             return res.status(400).json({ error: "Folder already exists" });
@@ -69,7 +69,7 @@ exports.addFolder = async (req, res) => {
 
 //remove a folder
 
-exports.removeFolder = async (req, res) => {
+exports.deleteFolder = async (req, res) => {
     console.log("BODY:", req.body, "SESSION USER:", req.session?.user);
   const userId = req.user?.id;
   const folderName = req.body.folderName;
@@ -78,7 +78,7 @@ exports.removeFolder = async (req, res) => {
     return res.status(400).json({ error: "Missing user ID or folder name" });
   }
 
-  const folder = await exports.getFolderByNameAndUser(folderName, userId);
+  const folder = await exports.findFolderByNameAndUserId(folderName, userId);
 
   if (!folder) {
     return res.status(404).json({ error: "Folder not found" });
@@ -97,7 +97,7 @@ exports.removeFolder = async (req, res) => {
 };
 
 //update Folder
-// controllers/folderController.js
+// controllers/folders.controller.js
 
 exports.updateFolder = async (req, res) => {
     console.log("BODY:", req.body);
@@ -111,7 +111,7 @@ exports.updateFolder = async (req, res) => {
         return res.status(400).json({ error: "Missing user ID, current folder name, or new folder name" });
     }
 
-    const folder = await exports.getFolderByNameAndUser(folderName, userId);
+    const folder = await exports.findFolderByNameAndUserId(folderName, userId);
 
     if (!folder) {
         return res.status(404).json({ error: "Folder not found" });
@@ -130,7 +130,7 @@ exports.updateFolder = async (req, res) => {
 
 
 // Get a folder by name
-exports.getFolderByNameAndUser = async (folderName, userId) => {
+exports.findFolderByNameAndUserId = async (folderName, userId) => {
   return prisma.folder.findFirst({
       where: {
           name: folderName,
@@ -141,12 +141,12 @@ exports.getFolderByNameAndUser = async (folderName, userId) => {
 
 
 // Get all folders for a user
-exports.getUserFoldersById = async (userId) => {
+exports.findFoldersByUserId = async (userId) => {
     return prisma.folder.findMany({ where: { userId } });
 };
 
 // Fetch and render user folders
-exports.getUserFolders = async (req, res) => {
+exports.renderUserFoldersList = async (req, res) => {
     try {
         const userId = req.user?.id;
 
@@ -154,7 +154,7 @@ exports.getUserFolders = async (req, res) => {
             return res.status(401).json({ error: "User not authenticated" });
         }
 
-        const folders = await this.getUserFoldersById(userId);
+        const folders = await this.findFoldersByUserId(userId);
         res.render("folderList", { title: "User Folders", folders, userName: req.user.userName || "Guest" });
     } catch (err) {
         console.error("Error fetching user folders:", err);

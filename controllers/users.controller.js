@@ -1,9 +1,7 @@
-//placeholder
-
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
-exports.getUsers = async (req, res) => {
+exports.getAllUsers = async (req, res) => {
   try {
     return await prisma.user.findMany();
   } catch (err) {
@@ -14,7 +12,7 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-exports.getUserByName = async (username) => {
+exports.findUserByName = async (username) => {
   try {
     return await prisma.user.findFirst({
       where: {
@@ -27,7 +25,7 @@ exports.getUserByName = async (username) => {
   }
 };
 
-exports.getUserId = async (userName) => {
+exports.findUserIdByName = async (userName) => {
   try {
     return await prisma.user.findUnique({
       where: {userName: userName},
@@ -40,7 +38,7 @@ exports.getUserId = async (userName) => {
   }
 };
 
-exports.getUserByUserId = async (id) => {
+exports.findUserById = async (id) => {
   if (!id) {
     throw new Error("User ID is required");
   }
@@ -57,7 +55,7 @@ exports.getUserByUserId = async (id) => {
   }
 };
 
-exports.addAdminStatus = async (userName) => {
+exports.makeUserAdmin = async (userName) => {
   try {
     await prisma.user.update({
       where: { userName: userName },

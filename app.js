@@ -11,7 +11,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 
-const usersController = require("./controllers/userController");
+const usersController = require("./controllers/users.controller");
 const passport = require("passport");
 const flash = require("express-flash");
 const session = require("express-session");
@@ -22,16 +22,16 @@ const usersRouter = require("./routes/users");
 const registerRouter = require("./routes/register");
 const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout");
-const filesAndFoldersRouter = require("./routes/filesAndFolders");
-const folderRouter = require("./routes/folder");
+const filesAndFoldersRouter = require("./routes/folders");
+const folderRouter = require("./routes/singleFolder");
 
 
 const initializePassport = require("./config/passport-config");
 
 initializePassport(
   passport,
-  usersController.getUserByName,
-  usersController.getUserByUserId,
+  usersController.findUserByName,
+  usersController.findUserById,
 );
 
 const app = express();
@@ -47,7 +47,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 const { PrismaClient } = require("@prisma/client");
-const {filesAndFolders} = require("./controllers/folderController");
+const {filesAndFolders} = require("./controllers/folders.controller");
 const PrismaSessionStore = require("@quixo3/prisma-session-store").PrismaSessionStore;
 
 // Initialize Prisma Client i.e logging into database

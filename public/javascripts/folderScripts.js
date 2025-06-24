@@ -1,260 +1,212 @@
-document.addEventListener('click', e => {
-  const isDropdownButton = e.target.matches('[data-dropdown-button]');
-  let currentDropdown;
 
-  if (isDropdownButton) {
-    currentDropdown = e.target.closest('[data-dropdown]');
-    currentDropdown.classList.toggle('active');
+
+// Show popup with a form
+function openFolderPopup(formBuilder) {
+  displayPopup(formBuilder);
+}
+
+// Build the edit folder form
+function buildEditFolderForm(editButton) {
+  const folderContainer = editButton.closest(".folder-container");
+  const folderNameElement = folderContainer.querySelector(".folder-name");
+
+  const formContainer = document.createElement("div");
+  formContainer.classList.add("folderFormContainer");
+
+  const form = document.createElement("form");
+  form.classList.add("folderForm");
+
+  const folderTitle = document.createElement("h1");
+  folderTitle.textContent = folderNameElement.textContent;
+
+  const folderNameInput = document.createElement('input');
+  folderNameInput.type = 'text';
+  folderNameInput.name = "newFolderName";
+
+  const submitEditButton = document.createElement("button");
+  submitEditButton.type = "submit";
+  submitEditButton.textContent = "Edit Folder Name";
+
+  submitEditButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const currentFolderName = folderNameElement.textContent;
+    const updatedFolderName = folderNameInput.value;
+    const response = await fetch("/files/editFolderName", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ folderName: currentFolderName, newFolderName: updatedFolderName }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update folder name");
+    }
+
+    folderNameElement.textContent = updatedFolderName;
+    closePopup(document.querySelector(".popup-overlay"));
+  });
+
+  form.appendChild(folderTitle);
+  form.appendChild(folderNameInput);
+  form.appendChild(submitEditButton);
+  formContainer.appendChild(form);
+
+  return formContainer;
+}
+
+// Build the create folder form
+function buildCreateFolderForm() {
+  const formContainer = document.createElement("div");
+  formContainer.classList.add("folderFormContainer");
+
+  const form = document.createElement("form");
+  form.classList.add("folderForm");
+
+  const header = document.createElement("h3");
+  header.textContent = "Create Folder";
+
+  const label = document.createElement("h1");
+  label.textContent = "Folder Name";
+
+  const folderNameInput = document.createElement("input");
+  folderNameInput.type = "text";
+  folderNameInput.name = "folderName";
+
+  const submitCreateButton = document.createElement("button");
+  submitCreateButton.type = "submit";
+  submitCreateButton.textContent = "Create Folder";
+
+  submitCreateButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    createFolder();
+    closePopup(document.querySelector(".popup-overlay"));
+  });
+
+  form.appendChild(header);
+  form.appendChild(label);
+  form.appendChild(folderNameInput);
+  form.appendChild(submitCreateButton);
+  formContainer.appendChild(form);
+
+  return formContainer;
+}
+
+// Display popup overlay with form
+function displayPopup(formBuilder) {
+  const overlay = document.createElement("div");
+  overlay.classList.add("popup-overlay");
+
+  const form = formBuilder();
+  form.classList.add("popup-form");
+
+  overlay.appendChild(form);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) {
+      closePopup(overlay);
+    }
+  });
+}
+
+// Remove popup overlay
+function closePopup(overlay) {
+  document.body.removeChild(overlay);
+}
+
+// Create a new folder and add to DOM
+async function createFolder() {
+  const folderName = document.querySelector("input[name='folderName']").value;
+
+  if (!folderName.trim()) {
+    alert("Folder name cannot be empty.");
+    return;
   }
 
-  // Close all other dropdowns
-  document.querySelectorAll('[data-dropdown].active').forEach(dropdown => {
-    if (dropdown === currentDropdown) return;
-    dropdown.classList.remove('active');
-  });
-});
-
-
-
-
-
-function addFolderForm(formFunction) {
-    showPopup(formFunction);
-}
-
-function folderInfoForm(button) {
-    const folderContainer = button.closest(".folder-container");
-
-    // Then query the .folder-name inside it
-    const folderNameElement = folderContainer.querySelector(".folder-name");
-
-    let folderFormContainer = document.createElement("div");
-    folderFormContainer.classList.add("folderFormContainer");
-
-    let folderForm = document.createElement("form");
-    folderForm.classList.add("folderForm");
-
-    let formText = document.createElement("h1");
-    formText.textContent = folderNameElement.textContent;
-
-    let nameEditInput = document.createElement('input');
-    nameEditInput.type = 'text';
-    nameEditInput.name = "newFolderName";
-
-    let submitButton = document.createElement("button");
-    submitButton.type = "submit";
-    submitButton.textContent = "Edit Folder Name";
-
-   submitButton.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const folderName = folderNameElement.textContent;
-    const newFolderName = nameEditInput.value;
-    const res = await fetch("/files/editFolderName", {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ folderName, newFolderName }),
+  try {
+    const response = await fetch("/files/addFolder", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ folderName }),
     });
 
-    if (!res.ok) {
-        throw new Error("Failed to Update folder name");
+    if (!response.ok) {
+      throw new Error("Failed to create folder");
     }
 
-    // Update the folder name in the DOM immediately
-    folderNameElement.textContent = newFolderName;
-
-    hidePopup(document.querySelector(".popup-overlay"));
-});
-
-    folderForm.appendChild(formText);
-    folderForm.appendChild(nameEditInput);
-    folderForm.appendChild(submitButton);
-
-    folderFormContainer.appendChild(folderForm);
-
-    return folderFormContainer;
-}
-
-//used in folderList.ejs to create the folder form on the fly
-function createFolderForm() {
-    let folderFormContainer = document.createElement("div");
-    folderFormContainer.classList.add("folderFormContainer");
-
-    let folderForm = document.createElement("form");
-    folderForm.classList.add("folderForm");
-
-    let formHeader = document.createElement("h3");
-    formHeader.textContent = "Create Folder";
-
-    let formText = document.createElement("h1");
-    formText.textContent = "Folder Name";
-
-    let folderInput = document.createElement("input");
-    folderInput.type = "text";
-    folderInput.name = "folderName";
-
-    let submitButton = document.createElement("button");
-    submitButton.type = "submit";
-    submitButton.textContent = "Create Folder";
-
-    submitButton.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        addFolder();
-        hidePopup(document.querySelector(".popup-overlay"));
+    const folder = await response.json();
+    const folderList = document.querySelector(".folderList-Container");
+    if (!folderList) {
+      console.warn("⚠️ folderList-Container not found");
+      return;
     }
-    );
 
-    folderForm.appendChild(formHeader);
-    folderForm.appendChild(formText);
-    folderForm.appendChild(folderInput);
-    folderForm.appendChild(submitButton);
-
-    folderFormContainer.appendChild(folderForm);
-
-    return folderFormContainer;
+    const newFolderElement = document.createElement("div");
+    newFolderElement.classList.add("folder-container");
+    newFolderElement.innerHTML = `
+      <a class="folder-link" href="/folder/${folder.id}">
+        <div class="folder-icon">
+          <img src="/images/folder.png" alt="Folder Icon">
+        </div>
+        <div class="folder-name">
+          <span>${folder.name}</span>
+        </div>
+      </a>
+      <div class="drpdown" data-dropdown>
+        <button class="drpdownMenuButton" data-dropdown-button>...</button>
+        <div class="drpdownMenu">
+          <a href="/">test</a>
+        </div>
+      </div>
+    `;
+    folderList.appendChild(newFolderElement);
+  } catch (error) {
+    console.error("❌ Error in createFolder():", error);
+    alert("An error occurred while creating the folder.");
+  }
 }
 
+// Delete a folder and remove from DOM
+async function deleteFolder(deleteButton) {
+  const folderContainer = deleteButton.closest(".folder-container");
+  const folderNameElement = folderContainer.querySelector(".folder-name");
+  const folderName = folderNameElement.textContent.trim();
 
+  console.log("Folder to DELETE:", folderName);
 
-function showPopup(formFunction) {
-
-    const overlay = document.createElement("div");
-    overlay.classList.add("popup-overlay");
-
-    const folderForm = formFunction();
-    folderForm.classList.add("popup-form");
-
-    overlay.appendChild(folderForm);
-    document.body.appendChild(overlay);
-
-    overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) {
-            hidePopup(overlay);
-        }
+  try {
+    const response = await fetch("/files/removeFolder", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ folderName }),
     });
-}
 
-function hidePopup(overlay) {
-    document.body.removeChild(overlay);
-}
-
-
-// This adds folder button to dom
-async function addFolder() {
-    let folderName = document.querySelector("input[name='folderName']").value;
-
-    if (!folderName.trim()) {
-        alert("Folder name cannot be empty.");
-        return;
+    if (!response.ok) {
+      throw new Error("Failed to DELETE folder");
     }
 
-    try {
-        const res = await fetch("/files/addFolder", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ folderName }),
-        });
-
-        if (!res.ok) {
-            throw new Error("Failed to create folder");
-        }
-
-        const folder = await res.json();
-
-        // ✅ Select the container that holds all folder blocks
-        let folderListContainer = document.querySelector(".folderList-Container");
-        if (!folderListContainer) {
-            console.warn("⚠️ folderList-Container not found");
-            return;
-        }
-
-        // ✅ Create a new folder block
-        let newFolder = document.createElement("div");
-        newFolder.classList.add("folder-container");
-
-        newFolder.innerHTML = `
-          <a class="folder-link" href="/folder/${folder.id}">
-            <div class="folder-icon">
-              <img src="/images/folder.png" alt="Folder Icon">
-            </div>
-            <div class="folder-name">
-              <span>${folder.name}</span>
-            </div>
-          </a>
-
-          <div class="drpdown" data-dropdown>
-            <button class="drpdownMenuButton" data-dropdown-button>...</button>
-            <div class="drpdownMenu">
-              <a href="/">test</a>
-            </div>
-          </div>
-        `;
-
-        folderListContainer.appendChild(newFolder);
-    } catch (error) {
-        console.error("❌ Error in addFolder():", error);
-        alert("An error occurred while creating the folder.");
-    }
+    folderContainer.remove();
+  } catch (error) {
+    console.error("❌ Error in deleteFolder():", error);
+    alert("An error occurred while deleting the folder.");
+  }
 }
 
-async function removeFolder(button) {
-    // Go up to the folder-container div
-    const folderContainer = button.closest(".folder-container");
-
-    // Then query the .folder-name inside it
-    const folderNameElement = folderContainer.querySelector(".folder-name");
-
-    // Get the trimmed text content
-    const folderName = folderNameElement.textContent.trim();
-
-    console.log("Folder to DELETE:", folderName);
-
-    try {
-        const res = await fetch("/files/removeFolder", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({folderName}),
-        });
-
-        if (!res.ok) {
-            throw new Error("Failed to DELETE folder");
-        }
-
-        folderContainer.remove();
-
-
-        } catch (error) {
-        console.error("❌ Error in addFolder():", error);
-        alert("An error occurred while Deleting the folder.");
-    }
-
-}
-
-
-
-
+// Fetch user folders (for future use)
 async function fetchUserFolders() {
-    try {
-        const res = await fetch("/files/userFolders");
-        if (!res.ok) {
-            throw new Error("Failed to fetch folders");
-        }
-
-        const folders = await res.json();
-        console.log(folders); // Use this data to render folders in the UI
-    } catch (error) {
-        console.error(error);
-        alert("An error occurred while fetching folders.");
+  try {
+    const response = await fetch("/files/userFolders");
+    if (!response.ok) {
+      throw new Error("Failed to fetch folders");
     }
+    const folders = await response.json();
+    console.log(folders);
+  } catch (error) {
+    console.error(error);
+    alert("An error occurred while fetching folders.");
+  }
 }
 
-
+// Close dropdown when clicking a link inside
 document.querySelectorAll('.drpdownMenu a').forEach(link => {
   link.addEventListener('click', () => {
     const parentDropdown = link.closest('[data-dropdown]');

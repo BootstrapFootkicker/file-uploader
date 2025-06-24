@@ -1,5 +1,5 @@
 const passport = require("passport");
-const userController = require("./userController");
+const userController = require("./users.controller");
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
