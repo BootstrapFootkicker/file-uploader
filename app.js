@@ -24,6 +24,7 @@ const loginRouter = require("./routes/login");
 const logoutRouter = require("./routes/logout");
 const filesAndFoldersRouter = require("./routes/folders");
 const folderRouter = require("./routes/singleFolder");
+const uploadRouter= require("./routes/upload");
 
 
 const initializePassport = require("./config/passport-config");
@@ -83,7 +84,7 @@ app.use("/login", loginRouter);
 app.use("/logout", logoutRouter);
 app.use("/files",filesAndFoldersRouter);
 app.use("/folder",folderRouter);
-7
+app.use("/upload",uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
