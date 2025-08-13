@@ -11,6 +11,7 @@
 <h1><%= title %></h1>
 <form action="/upload" method="post" enctype="multipart/form-data">
     <input type="file" id="myfile" name="filename">
+    <input type="hidden" name="folderId" value="<%= folder.id %>">
     <input type="submit">
 </form>
 <h1>items</h1>
