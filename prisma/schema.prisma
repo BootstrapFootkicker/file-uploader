@@ -9,6 +9,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.Text // MediumText may be needed for MySql
+  expiresAt DateTime
+}
+
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -18,13 +25,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   folder folder[]
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String   @db.Text // MediumText may be needed for MySql
-  expiresAt DateTime
+  file   file[] // <-- Add this line
 }
 
 model folder {
@@ -35,5 +36,22 @@ model folder {
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([name, userId]) // ✅ This makes folder names unique *per user*
+  file file[] // <-- Add this line
+
+  @@unique([name, userId])
+}
+
+model file {
+  id           String   @id @default(cuid())
+  name         String
+  path         String
+  cloudinaryId String? // NEW
+  type         String? // NEW
+  size         Int? // NEW
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  folderId     String
+  folder       folder   @relation(fields: [folderId], references: [id])
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
 }
