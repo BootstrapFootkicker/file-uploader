@@ -81,4 +81,6 @@ jspm_packages/
 .dynamodb/
 
 #multer
-.uploads/
+uploads/
+
+
