@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-// Render the files and folders page
+// Render the files.js and folders page
 exports.renderUserFoldersPage = async (req, res) => {
     try {
         const userId = req.user?.id;
@@ -165,3 +165,4 @@ exports.renderUserFoldersList = async (req, res) => {
         res.status(500).send("Failed to fetch folders");
     }
 };
+

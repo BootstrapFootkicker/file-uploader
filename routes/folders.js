@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", checkAuth, folderController.renderUserFoldersPage);
 router.get("/:folderId", checkAuth, folderController.renderSingleFolderPage);
 router.post("/addFolder", (req, res, next) => {
-    console.log("📡 /files/addFolder called");
+    console.log("📡 /files.js/addFolder called");
     next();
 }, checkAuth, folderController.createFolder);
 router.get("/userFolders", checkAuth, folderController.renderUserFoldersList);
