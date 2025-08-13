@@ -15,5 +15,16 @@
     <input type="submit">
 </form>
 <h1>items</h1>
+<div class="files-container">
+  <% files.forEach(function(file) { %>
+    <div>
+      <%= file.path %>
+        <form action="/file/delete/<%= file.id %>" method="POST" style="display:inline;">
+  <button type="submit" onclick="return confirm('Are you sure?')">🗑️ Delete</button>
+</form>
+
+    </div>
+  <% }); %>
+</div>
 </body>
 </html>

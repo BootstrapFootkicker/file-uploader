@@ -10,23 +10,27 @@ exports.renderUserFoldersPage = async (req, res) => {
         const folders = userId ? await this.findFoldersByUserId(userId) : [];
         res.render("folderList", { title: "User Folders", folders, userName });
     } catch (err) {
-        console.error("Error rendering files and folders:", err);
+        console.error("Error rendering files.js and folders:", err);
         res.status(500).send("Server Error");
     }
 };
 
 // Render a specific folder
+
 exports.renderSingleFolderPage = async (req, res) => {
     try {
         const folderId = req.params.folderId;
         const userName = req.isAuthenticated() ? req.user.userName : "Guest";
-        const folder = await prisma.folder.findUnique({ where: { id: folderId } });
+        const folder = await prisma.folder.findUnique({
+            where: { id: folderId },
+            include: { file: true } // Fetch related files.js
+        });
 
         if (!folder) {
             return res.status(404).send("Folder not found");
         }
 
-        res.render("folder", { title: folder.name, folder, userName });
+        res.render("folder", { title: folder.name, folder, files: folder.file, userName });
     } catch (err) {
         console.error("Error rendering folder:", err);
         res.status(500).send("Server Error");
