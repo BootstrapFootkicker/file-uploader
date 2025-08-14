@@ -31,3 +31,15 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+.links,.login-container{
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.links a{
+    text-decoration: none;
+    color:blue;
+}

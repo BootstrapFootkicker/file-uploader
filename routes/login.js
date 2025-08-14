@@ -6,7 +6,8 @@ const passport = require("passport");
 // GET login page
 router.get("/", (req, res, next) => {
   try {
-    res.render("login", { title: "Login" });
+    const userName = req.user ? req.user.name : "Guest";
+    res.render("login", { title: "Login", userName });
   } catch (err) {
     next(err);
   }

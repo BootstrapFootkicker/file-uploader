@@ -29,7 +29,8 @@ router.post("/", checkAuth, upload.single("filename"), async (req, res) => {
       }
     });
 
-    res.redirect(`/folder/${folderId}`);
+res.redirect("/");
+
   } catch (err) {
     console.error("Error saving file to DB:", err);
     res.status(500).send("File upload succeeded but saving to DB failed.");

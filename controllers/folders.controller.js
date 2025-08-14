@@ -2,18 +2,6 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-// Render the files.js and folders page
-exports.renderUserFoldersPage = async (req, res) => {
-    try {
-        const userId = req.user?.id;
-        const userName = req.isAuthenticated() ? req.user.userName : "Guest";
-        const folders = userId ? await this.findFoldersByUserId(userId) : [];
-        res.render("folderList", { title: "User Folders", folders, userName });
-    } catch (err) {
-        console.error("Error rendering files.js and folders:", err);
-        res.status(500).send("Server Error");
-    }
-};
 
 // Render a specific folder
 
@@ -78,6 +66,7 @@ exports.deleteFolder = async (req, res) => {
   const userId = req.user?.id;
   const folderName = req.body.folderName;
 
+
   if (!userId || !folderName) {
     return res.status(400).json({ error: "Missing user ID or folder name" });
   }
@@ -87,6 +76,10 @@ exports.deleteFolder = async (req, res) => {
   if (!folder) {
     return res.status(404).json({ error: "Folder not found" });
   }
+
+if (folder.file && folder.file.length > 0) {
+    return res.status(400).json({ error: "Folder not empty" });
+}
 
   try {
     await prisma.folder.delete({
@@ -139,30 +132,24 @@ exports.findFolderByNameAndUserId = async (folderName, userId) => {
       where: {
           name: folderName,
           userId: userId,
+
       },
+        include: { file: true }
   });
 };
 
 
 // Get all folders for a user
 exports.findFoldersByUserId = async (userId) => {
-    return prisma.folder.findMany({ where: { userId } });
+return prisma.folder.findMany({
+  where: { userId },
+  orderBy: { name: 'asc' } // Alphabetical A-Z
+});
+
 };
 
-// Fetch and render user folders
-exports.renderUserFoldersList = async (req, res) => {
-    try {
-        const userId = req.user?.id;
 
-        if (!userId) {
-            return res.status(401).json({ error: "User not authenticated" });
-        }
 
-        const folders = await this.findFoldersByUserId(userId);
-        res.render("folderList", { title: "User Folders", folders, userName: req.user.userName || "Guest" });
-    } catch (err) {
-        console.error("Error fetching user folders:", err);
-        res.status(500).send("Failed to fetch folders");
-    }
-};
+
+
 

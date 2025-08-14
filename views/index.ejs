@@ -1,31 +1,79 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <header>
-
-
-      <h1>Members Only</h1>
-      <nav class="links">
-        <a href="/">Home</a>
-        <a href="/register">Register</a>
-             <% if (userName !=="Guest") { %>
-             <form action="/logout?_method=DELETE" method="post">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel='stylesheet' href='/stylesheets/styles.css'/>
+  <link rel="stylesheet" href="/stylesheets/folderStyles.css">
+  <script src="/javascripts/folderScripts.js" defer></script>
+  <script src="/javascripts/dropdown.js" defer></script>
+</head>
+<body>
+<header>
+  <nav class="links">
+    <a href="/">Home</a>
+    <% if (userName !== "Guest") { %>
+      <form action="/logout?_method=DELETE" method="post">
         <button type="submit">Logout</button>
       </form>
-        <% } else { %>
-          <a href="/login">Login</a>
-        <% } %>
+    <% } else { %>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    <% } %>
+    <a href="/files">Files</a>
+  </nav>
+</header>
 
-        <a href="/files">Files</a>
-      </nav>
-    </header>
+<div class="folderList-Container">
+  <% folders.forEach(folder => { %>
+    <div class="folder-container">
+      <a class="folder-link" href="/folder/<%= folder.id %>">
+        <div class="folder-icon">
+          <img src="/images/folder.png" alt="Folder Icon">
+        </div>
+        <div class="folder-name">
+          <span><%= folder.name %></span>
+        </div>
+      </a>
 
+      <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="filename" required />
+        <input type="hidden" name="folderId" value="<%= folder.id %>" />
+        <button type="submit">Upload</button>
+      </form>
 
+      <% if (folder.file.length === 0) { %>
+        <p>No files yet.</p>
+      <% } else { %>
+        <ul>
+          <% folder.file.forEach(file => { %>
+            <li>
+              <strong><%= file.name %></strong>
+              <% if (file.type && file.type.startsWith('image/')) { %>
+                <br><img src="<%= file.path %>" width="150" />
+              <% } else { %>
+                <br><a href="<%= file.path %>" target="_blank">View</a>
+              <% } %>
+              <form action="/file/delete/<%= file.id %>" method="POST" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure?')">🗑️ Delete</button>
+              </form>
+            </li>
+          <% }) %>
+        </ul>
+      <% } %>
 
+      <div class="drpdown" data-dropdown>
+        <button class="drpdownMenuButton" data-dropdown-button>...</button>
+        <div class="drpdownMenu">
+          <button type="button" onclick="openFolderPopup(() => buildEditFolderForm(this))">Edit</button>
+          <button type="button" onclick="deleteFolder(this)">Delete</button>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
 
-  </body>
+<button class="add" onclick="openFolderPopup(buildCreateFolderForm)">+ Folder</button>
+</body>
 </html>
