@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,31 +8,33 @@
     <title>Login Page</title>
     <link rel="stylesheet" href="/stylesheets/styles.css">
 </head>
-  <nav class="links">
-        <a href="/">Home</a>
-
-      <% if (userName !=="Guest") { %>
-             <form action="/logout?_method=DELETE" method="post">
-        <button type="submit">Logout</button>
-      </form>
-        <% } else { %>
-          <a href="/login">Login</a>
-      <a href="/register">Register</a>
-        <% } %>
-
-        <a href="/files">Files</a>
-      </nav>
 <body>
-<% if(messages.error) { %>
-    <%= messages.error %>
-<% } %>
-<form method="POST" action="/login">
-    <label for="userName">Username</label>
-    <input type="text" id="userName" name="userName">
-    <label for="password">Password</label>
-    <input type="password" id="password" name="password">
-    <button type="submit">Login</button>
+<header>
 
-</form>
+</header>
+
+<main>
+    <% if (messages.error) { %>
+        <div class="error-message"><%= messages.error %></div>
+    <% } %>
+
+        <div class="welcome-container">
+            <h1>Welcome</h1>
+            <span>Sign into file uploader</span>
+        </div>
+
+    <form method="POST" action="/login" class="login-form">
+
+        <input type="text" id="userName" name="userName" required placeholder="Username">
+        <input type="password" id="password" name="password" required placeholder="Password">
+
+
+        <button type="submit">Sign In</button>
+    </form>
+
+    <div class="register-container">
+        <span>Don't have an account? </span><a href="/register">Create one</a>
+    </div>
+</main>
 </body>
 </html>
