@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
 :root {
     --bg: #0e0f10;   /* base background */
     --blob: #2a1f1f; /* blob color */
+    --logo-bg: #223a5e; /* soft blue for user logo circle */
+    --logo-outline: #4f83cc; /* lighter blue for outline */
 
     /* Button colors */
     --accent: #e34b3f;
@@ -13,6 +17,7 @@ html, body {
     height: 100%;
     margin: 0;
     overflow: hidden;
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
 body {
@@ -102,24 +107,115 @@ body::before {
     transition: background 0.2s;
 }
 
+.index-header-left-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+.index-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+  
+}
+
+
+.user-logo-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background: var(--logo-bg, #223a5e);
+    color: var(--accent-text, #fff);
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 2px solid var(--logo-outline, #4f83cc);
+    line-height: 1; /* Add this if not present */
+}
+
+.main-left-container{
+    display: flex;
+    padding: 1rem 0 1rem 1rem;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+  
+  
+}
+.main-right-container{
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem 1rem 0;
+    justify-content: flex-start;
+    gap: 1rem;
+    flex: 1;
+    min-width: 0; /* allow flex children to shrink */
+}
+
+.folder-info-bar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    
+    gap: .5rem;
+   
+    background: var(--blob);
+    width: 100%;
+    box-sizing: border-box; /* include padding and border in width */
+    min-width: 0; /* allow flex children to shrink */
+}
 button:hover,
 button:focus {
     background: var(--accent-hover);
 }
 
 
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--blob);
+    height: 100vh;
+ 
+    box-sizing: border-box;
+    width: 220px;
+    min-width: 180px;
+    max-width: 300px;
+}
 
-
-main {
+.index-main {
     min-height: 100vh;
     height: 100vh;
     box-sizing: border-box;
-    padding: 0; /* Remove extra padding if not needed */
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    gap: .2rem;
+}
+
+.login-main{
+    justify-self: center;
+    align-self: center;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
+    gap: 1rem;
+    padding: 0 2vw;
+    width: 100%;
+    max-width: 500px;
+}
+.login-form {
+    padding: 0;
 }
 
 @media (max-width: 600px) {
