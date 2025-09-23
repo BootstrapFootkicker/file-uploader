@@ -8,7 +8,7 @@
 
     /* Button colors */
     --accent: #e34b3f;
-    --accent-hover: #c53c32;
+    --accent-hover: rgba(255, 255, 255, 0.06);
     --accent-text: #ffffff;
 
 }
@@ -173,6 +173,7 @@ body::before {
 button:hover,
 button:focus {
     background: var(--accent-hover);
+    color: white;
 }
 
 
@@ -192,6 +193,11 @@ button:focus {
     max-width: 300px;
     
     border-right: 2px solid var(--accent);
+}
+.sidebar button{
+    padding: 9px 12px;
+    font-size: 0.95rem;
+    border-radius: 10px;
 }
 
 .index-main {

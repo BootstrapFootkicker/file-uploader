@@ -1,3 +1,18 @@
+/* Unified subtle divider color token */
+:root {
+    --divider: rgba(255, 255, 255, 0.08);
+}
+
+/* Header border uses unified divider */
+.index-header {
+    border-bottom: 1px solid var(--divider);
+}
+
+/* Sidebar border uses unified divider */
+.sidebar {
+    border-right: 1px solid var(--divider);
+}
+
 /* files.js and folders css */
 
 
@@ -39,17 +54,19 @@
 /* Visual separators for header */
 .folder-info-bar {
     font-weight: 600;
-    border-bottom: 1px solid #e0e0e0;
+    outline: none;
+    border: 1px solid var(--divider);
+    border-radius: 10px; /* keep if you like the card look */
 }
 
 /* Folder row visuals */
 .folder-container {
     justify-items: start;
-    /* outline: 2px black; */
+
 }
 
 .folder-container:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(255, 255, 255, 0.06)
 }
 
 /* Place elements into the grid columns explicitly */
@@ -67,6 +84,10 @@
     white-space: nowrap;
 }
 
+.folder-container a {
+    color: white;
+    text-decoration: none;
+}
 /* place the date in column 3 and trim overflow */
 .folder-container .folder-date {
     grid-column: 3; /* uploaded date */
