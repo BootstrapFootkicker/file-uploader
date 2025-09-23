@@ -32,10 +32,11 @@
     <div class="main-left-container">
         <div class="sidebar">
             <a href="/"><button class="sidebar-button">Home</button></a>
+            <button class="add" onclick="openFolderPopup(buildCreateFolderForm)">+ Folder</button>
             <form action="/logout?_method=DELETE" method="post">
                 <button type="submit">Logout</button>
             </form>
-            <button class="add" onclick="openFolderPopup(buildCreateFolderForm)">+ Folder</button>
+          
 
         </div>
     </div>
@@ -44,7 +45,7 @@
         <div class="folder-info-bar">
             <span>Name</span>
             <span>Uploaded</span>
-            <span>File Count</span>
+          
         </div>
         <div class="folderList-Container">
             <% folders.forEach(folder => { %>
@@ -55,6 +56,9 @@
                         </div>
                         <div class="folder-name">
                             <span><%= folder.name %></span>
+                        </div>
+                        <div class="folder-date">
+                            <span><%= new Date(folder.date).toISOString().slice(0, 10) %></span>
                         </div>
                     </a>
                     <div class="drpdown" data-dropdown>

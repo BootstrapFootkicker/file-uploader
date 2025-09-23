@@ -14,37 +14,177 @@
     object-fit: contain;
 }
 
+/* Make the folder list stack vertically instead of a single row */
 .folderList-Container {
     display: flex;
-    align-items: center;
+    flex-direction: column; /* stack folder rows */
+    align-items: stretch;
     justify-content: flex-start;
     gap: 10px;
     padding: 10px;
-    outline: 2px red;
+    /* outline: 2px red; */
 }
 
+/* Use a shared grid layout for the header and each folder row so columns line up */
+/* Columns: icon (fixed), name (flex), uploaded date (fixed) */
+.folder-info-bar,
 .folder-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 40px minmax(180px, 1fr) 140px 90px;
     align-items: center;
-    justify-content: center;
     gap: 10px;
     padding: 10px;
-    outline: 2px black;
+}
+
+/* Visual separators for header */
+.folder-info-bar {
+    font-weight: 600;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Folder row visuals */
+.folder-container {
+    justify-items: start;
+    /* outline: 2px black; */
 }
 
 .folder-container:hover {
     background-color: #f0f0f0;
 }
 
-.folderFormContainer {
+/* Place elements into the grid columns explicitly */
+.folder-container .folder-icon {
+    grid-column: 1; /* icon */
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 10px;
 }
 
+.folder-container .folder-name {
+    grid-column: 2; /* name */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* place the date in column 3 and trim overflow */
+.folder-container .folder-date {
+    grid-column: 3; /* uploaded date */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+
+.folder-container .drpdown {
+    grid-column: 4; /* dropdown / actions */
+    justify-self: end;
+}
+
+/* Header spans map to columns 2..4 (we keep column 1 reserved for the icon) */
+.folder-info-bar > span:nth-child(1) { grid-column: 2; }
+.folder-info-bar > span:nth-child(2) { grid-column: 3; justify-self: start; }
+.folder-info-bar > span:nth-child(3) { grid-column: 4; justify-self: end; }
+
+/* Ensure the link itself doesn't break the grid placement */
+.folder-container > a.folder-link {
+    display: contents; /* let children participate directly in the grid */
+}
+
+
+
+/* Natural-looking compact card */
+.popup-form {
+    width: min(92vw, 340px);
+    max-width: 340px;
+    padding: 10px 14px;
+    min-height: 160px;            
+    border-radius: 12px;
+    
+    /* card visuals */
+    background: rgba(20, 22, 25, 0.9);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+
+    /* layout */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;            /* let children fill width naturally */
+    justify-content: flex-start;     /* avoid vertical centering gaps */
+    gap: 10px;                       /* natural spacing between elements */
+}
+
+
+.popup-form h3 {
+    margin: 0 0 2px 0;              /* tiny bottom margin only */
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.popup-form h1 {
+    margin: 0;                       /* no extra vertical push */
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #cfd3da;
+}
+
+/* Inputs: comfortable but compact */
+.popup-form input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    font-size: 0.95rem;
+    color: #e9edf2;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+}
+
+/* Actions: align right with subtle top offset */
+.form-button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 2px;
+}
+.popup-form button {
+    padding: 9px 12px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+}
+
+/* Remove default form margin */
+.popup-form {
+    margin: 0;
+}
+
+/* Ensure no trailing space from the last child */
+.popup-form > :last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Normalize common element margins inside the popup */
+.popup-form h1,
+.popup-form h2,
+.popup-form h3,
+.popup-form p {
+    margin-top: 0;
+    margin-bottom: 6px;
+}
+
+/* Avoid extra space from buttons/inputs */
+.popup-form input,
+.popup-form button {
+    margin: 0;
+}
+
+/* If you use a gap on the container, avoid extra bottom margin on groups */
+.popup-form .form-button-container {
+    margin-bottom: 0;
+}
 /* Popup overlay for folder creation */
 .popup-overlay {
     position: fixed;
@@ -59,12 +199,7 @@
     z-index: 1000;
 }
 
-.popup-form {
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
+
 
 /* Dropdown styling */
 .drpdown {
@@ -85,8 +220,25 @@
     transition: opacity 0.2s ease;
 }
 
-/* This is the correct rule to make the menu show when .active is added */
+
 .drpdown.active .drpdownMenu {
     opacity: 1;
     pointer-events: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 700px) {
+    .folder-info-bar,
+    .folder-container {
+        grid-template-columns: 36px 1fr auto; /* collapse to 3 columns on small screens */
+    }
+    /* header spans adjust to 2 columns (name + actions); hide or stack others if needed */
+    .folder-info-bar > span:nth-child(1) { grid-column: 2; }
+    .folder-info-bar > span:nth-child(2) { display: none; }
+    .folder-info-bar > span:nth-child(3) { grid-column: 3; }
+
+    /* ensure date and dropdown stay visible on small screens */
+    .folder-container .folder-name { grid-column: 2; }
+    .folder-container .folder-date { display: none; } /* hide date on very small screens to save space */
+    .folder-container .drpdown { grid-column: 3; }
 }

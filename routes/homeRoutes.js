@@ -10,11 +10,17 @@ router.get("/", checkAuth, async (req, res) => {
     const userId = req.user.id;
     const userName = req.user.userName || "Guest";
 
-    const folders = await prisma.folder.findMany({
+    const foldersRaw = await prisma.folder.findMany({
       where: { userId },
       include: { file: true },
-orderBy: { name: "asc" }
+      orderBy: { name: "asc" }
     });
+
+    // Map createdAt to a human-friendly date string expected by the view
+    const folders = foldersRaw.map(f => ({
+      ...f,
+      date: f.createdAt ? new Date(f.createdAt).toLocaleString() : ""
+    }));
 
     res.render("index", { folders, userName });
   } catch (err) {

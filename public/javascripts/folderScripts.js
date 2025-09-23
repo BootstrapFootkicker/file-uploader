@@ -3,14 +3,11 @@ function openFolderPopup(formBuilder) {
     displayPopup(formBuilder);
 }
 
-// Build the edit folder form
 function buildEditFolderForm(editButton) {
     const folderContainer = editButton.closest(".folder-container");
     const folderNameElement = folderContainer.querySelector(".folder-name");
 
-    const formContainer = document.createElement("div");
-    formContainer.classList.add("folderFormContainer");
-
+    // remove extra wrapper: use the form as main element
     const form = document.createElement("form");
     form.classList.add("folderForm");
 
@@ -46,32 +43,37 @@ function buildEditFolderForm(editButton) {
     form.appendChild(folderTitle);
     form.appendChild(folderNameInput);
     form.appendChild(submitEditButton);
-    formContainer.appendChild(form);
 
-    return formContainer;
+    return form;
 }
 
 // Build the create folder form
 function buildCreateFolderForm() {
-    const formContainer = document.createElement("div");
-    formContainer.classList.add("folderFormContainer");
-
+    // remove extra wrapper: use the form as main element
     const form = document.createElement("form");
     form.classList.add("folderForm");
 
     const header = document.createElement("h3");
-    header.textContent = "Create Folder";
+    header.textContent = "Create New Folder";
 
-    const label = document.createElement("h1");
-    label.textContent = "Folder Name";
+
 
     const folderNameInput = document.createElement("input");
     folderNameInput.type = "text";
     folderNameInput.name = "folderName";
+const formButtonContainer = document.createElement("div");
+formButtonContainer.classList.add("form-button-container");
 
+    
+    const cancelButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    cancelButton.addEventListener("click", () => closePopup(document.querySelector(".popup-overlay")));
+
+    
+    
     const submitCreateButton = document.createElement("button");
     submitCreateButton.type = "submit";
-    submitCreateButton.textContent = "Create Folder";
+    submitCreateButton.textContent = "Confirm";
 
     submitCreateButton.addEventListener("click", async (event) => {
         event.preventDefault();
@@ -79,14 +81,14 @@ function buildCreateFolderForm() {
         closePopup(document.querySelector(".popup-overlay"));
 
     });
-
+    formButtonContainer.appendChild(cancelButton);
+    formButtonContainer.appendChild(submitCreateButton);
     form.appendChild(header);
-    form.appendChild(label);
+ 
     form.appendChild(folderNameInput);
-    form.appendChild(submitCreateButton);
-    formContainer.appendChild(form);
+    form.appendChild(formButtonContainer);
 
-    return formContainer;
+    return form;
 }
 
 // Display popup overlay with form
@@ -139,6 +141,11 @@ async function createFolder() {
             return;
         }
 
+        // Format date-only for immediate display
+        const dateOnly = folder.date
+            ? new Date(folder.date).toISOString().slice(0, 10)
+            : new Date().toISOString().slice(0, 10);
+
         const newFolderElement = document.createElement("div");
         newFolderElement.classList.add("folder-container");
         newFolderElement.innerHTML = `
@@ -148,6 +155,9 @@ async function createFolder() {
         </div>
         <div class="folder-name">
           <span>${folder.name}</span>
+        </div>
+        <div class="folder-date">
+          <span>${dateOnly}</span>
         </div>
       </a>
      <div class="drpdown" data-dropdown>
@@ -160,7 +170,7 @@ async function createFolder() {
     `;
         folderList.appendChild(newFolderElement);
 
-// Sort the folders alphabetically after adding
+        // Sort the folders alphabetically after adding
         const folders = Array.from(folderList.children);
 
         folders.sort((a, b) => {
